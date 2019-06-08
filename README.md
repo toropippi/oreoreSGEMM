@@ -1,4 +1,4 @@
-# oreoreBLAS
+# oreoreSGEMM
 
 もともとはレジスターブロッキングの勉強のために始めました。
 https://cnugteren.github.io/tutorial/pages/page8.html
@@ -23,4 +23,3 @@ https://cnugteren.github.io/tutorial/pages/page8.html
 
 
 ※row majorとかcol majorとかがこんがらがってて、各SGEMMが行ってることがc=B.T*A , c=A*B , c=B.T*A.T　とぐちゃぐちゃのままです。
-
