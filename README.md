@@ -1,5 +1,4 @@
 # oreoreSGEMM
-
 もともとはレジスターブロッキングの勉強のために始めました。
 https://cnugteren.github.io/tutorial/pages/page8.html
 ここのOpenCL SGEMM TutorialをCUDAにコピペして遊んだりしながら自分なりに改良してoreoreSGEMMを作りました。結果、このコピペSGEMMより少く速くできました。
@@ -22,4 +21,12 @@ https://cnugteren.github.io/tutorial/pages/page8.html
 
 
 
+
 ※row majorとかcol majorとかがこんがらがってて、各SGEMMが行ってることがc=B.T*A , c=A*B , c=B.T*A.T　とぐちゃぐちゃのままです。
+
+
+実行環境
+Windows 10
+CUDA 10.1
+pyCUDA 2019.1
+Visual Studio 2017
