@@ -184,9 +184,7 @@ __global__ void oreoreSGEMM(int M, int N, int K, float* A, float* B, float* C) {
 
 
 
-//乱数生成
 __host__ void Generaterand(float* h_,int nr_rows_ ,int nr_cols_) {
-	//行列をA[y][x]としたときxで連続。yは行目、xは列目をあらわす
 	for (int i = 0; i < nr_rows_; i++) {
 		for (int j = 0; j < nr_cols_; j++) {
 			h_[i*nr_cols_ + j] = (float)rand()*0.000030517578125f;
@@ -231,26 +229,24 @@ int main() {
 	cudaMemcpy(d_A, h_A, nr_rows_A * nr_cols_A * sizeof(float), cudaMemcpyHostToDevice);
 	cudaMemcpy(d_B, h_B, nr_rows_B * nr_cols_B * sizeof(float), cudaMemcpyHostToDevice);
 
-	// 初期化
-	cudaEvent_t start, stop;//時間計測用
+	// init
+	cudaEvent_t start, stop;
 	cudaEventCreate(&start);
 	cudaEventCreate(&stop);
 
-	//初回カーネル起動
+	//first kernel overhead
 	dim3 block(TSM / WPTM, TSN / WPTN);
 	dim3 grid(N / TSM, N / TSN);
 	oreoreSGEMM <<<grid, block >>> (nr_rows_A, nr_cols_B, nr_cols_A, d_A, d_B, d_C);
-	cudaDeviceSynchronize();//まち
+	cudaDeviceSynchronize();//wait
 
-	int loops = 65536/ N; //SGEMM施行回数
+	int loops = 65536/ N; //SGEMM loop
 	cudaEventRecord(start);
 	for (int i = 0; i < loops; i++) {
 		oreoreSGEMM <<<grid, block >>> (nr_rows_A, nr_cols_B, nr_cols_A, d_A, d_B, d_C);
 	}
 	//cudaDeviceSynchronize();
-	// 終了時間を記録
 	cudaEventRecord(stop);
-	//イベントの終了を待つ。
 	cudaEventSynchronize(stop);
 
 	printf("end\n");
@@ -259,7 +255,7 @@ int main() {
 	cudaEventElapsedTime(&elapsed, start, stop);
 	printf( "Time: %fms, %f TFLOPS\n", elapsed, (double)N*N*N*2 / elapsed / 1000000000* loops);
 
-	//結果確認
+	//output
 	cudaMemcpy(h_C, d_C, nr_rows_C * nr_cols_C * sizeof(float), cudaMemcpyDeviceToHost);
 	print_matrix(h_A,nr_rows_A,nr_cols_A,h_B,nr_rows_B,nr_cols_B,h_C,nr_rows_C,nr_cols_C);
 
