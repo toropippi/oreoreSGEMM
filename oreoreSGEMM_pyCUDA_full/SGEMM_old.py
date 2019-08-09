@@ -4,6 +4,7 @@ import pycuda.driver as drv
 from pycuda.compiler import SourceModule
 import numpy as np
 import time
+
 np.set_printoptions(suppress=True)#強制的に小数表記
 
 TSK=16#                 // The tile-size in dimension K
