@@ -6,7 +6,6 @@ import numpy as np
 import time
 np.set_printoptions(suppress=True)#強制的に小数表記
 
-
 source="""
 #define TSN 128
 #define TSM 128
