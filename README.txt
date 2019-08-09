@@ -1,11 +1,11 @@
-# oreoreSGEMM
+﻿# oreoreSGEMM
 もともとはレジスターブロッキングの勉強のために始めました。
 https://cnugteren.github.io/tutorial/pages/page8.html
 ここのOpenCL SGEMM TutorialをCUDAにコピペして遊んだりしながら自分なりに改良してoreoreSGEMMを作りました。結果、このコピペSGEMMより少く速くできました。
 さらにそのあとcuBLASのSGEMMと比較してみました。
 このサイトで紹介されてるコードはグラフを見る限りcuBLASより2倍遅い感じでしたが、やってみると意外とそこまで差がつかなかったです。
 むしろTuring GPUではcuBLASが最適化されてないのかコピペSGEMMのほうがcuBLASより速かったです。私が速くするまでもなかったようです。
-なおoreoreSGEMMは行列の行と列がそれぞれ128の倍数でないと機能しません。
+なおoreoreSGEMM_oldは行列の行と列がそれぞれ128の倍数でないと機能しません。(追記、128の倍数でなくても稼働するようpycudaのfull版up)
 
 
 結果
@@ -22,7 +22,7 @@ https://cnugteren.github.io/tutorial/pages/page8.html
 
 
 
-※row majorとかcol majorとかがこんがらがってて、各SGEMMが行ってることがc=B.T*A , c=A*B , c=B.T*A.T　とぐちゃぐちゃのままです。
+※row majorとかcol majorとかがこんがらがってて、各SGEMMが行ってることがC=B.T*A , C=A*B , C=B.T*A.T　とぐちゃぐちゃのままです。
 
 
 実行環境
