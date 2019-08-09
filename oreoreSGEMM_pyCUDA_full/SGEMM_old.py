@@ -277,6 +277,7 @@ __global__ void oreoreSGEMM(int M,int N,int K,float* A,float* B,float* C) {
 #copypasteSGEMMはB.T*A、oreoreSGEMMはA*Bをやってます
 
 n=4096*4
+print("N={0}".format(n))
 npn=np.int32(n)
 
 programid = SourceModule(source)
@@ -314,6 +315,7 @@ drv.memcpy_dtoh(C,vram_C)
 print(C.reshape([n,n]))
 err=np.dot(A,B)-C.reshape([n,n])
 #err=np.dot(B.T,A)-C.reshape([n,n])#コピペSGEMMのときはここを使う
+print("誤差")
 print(np.max(err))#誤差max
 print(np.min(err))#誤差min
 
