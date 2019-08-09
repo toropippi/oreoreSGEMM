@@ -667,6 +667,8 @@ __global__ void oreoreTrans(int M,int N,float* A,float* AT) {
 #つまりrow major
 #row majorはnumpyと同じ仕様
 
+#配列 A は m x k 行列、配列 B は k x n 行列、配列 C は m x n 行列
+#ただしtransA,transBに転置を指定している場合、転置後のサイズがm,n,kとする
 
 programid = SourceModule(source)
 kernel_oreoreSGEMM_a=programid.get_function("oreoreSGEMM_a")
