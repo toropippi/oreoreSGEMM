@@ -753,43 +753,43 @@ def CreateABC(transA,transB,m,n,k):
 
 
 
+if __name__ == '__main__':
+    #適当に初期値を生成
+    m = 4096*4  # np.random.randint(4096*4)+1
+    n = 4096*4  # np.random.randint(4096*4)+1
+    k = 4096*4  # np.random.randint(4096*4)+1
 
-#適当に初期値を生成
-m=np.random.randint(4096*4)+1
-n=np.random.randint(4096*4)+1
-k=np.random.randint(4096*4)+1
+    if np.random.randint(2) == 0:
+        atflag = "T"  # 転置フラグ
+    else:
+        atflag = "N"
 
-if np.random.randint(2)==0:
-    atflag = "T"  # 転置フラグ
-else:
-    atflag = "N"
+    if np.random.randint(2) == 0:
+        btflag = "T"  # 転置フラグ
+    else:
+        btflag = "N"
 
-if np.random.randint(2) == 0:
-    btflag = "T"  # 転置フラグ
-else:
-    btflag = "N"
+    print("m={0} n={1} k={2} transA={3} transB={4}".format(m,n,k,atflag,btflag))
+    #global mem確保、行列初期データ生成
+    A,B,C,vram_A,vram_B,vram_C=CreateABC(transA=atflag,transB=btflag,m=m,n=n,k=k)
 
-print("m={0} n={1} k={2} transA={3} transB={4}".format(m,n,k,atflag,btflag))
-#global mem確保、行列初期データ生成
-A,B,C,vram_A,vram_B,vram_C=CreateABC(transA=atflag,transB=btflag,m=m,n=n,k=k)
-
-#自作SGEMM
-#初回カーネル起動
-mySGEMM(atflag, btflag, m, n, k, vram_A, vram_B, vram_C)
-drv.Context.synchronize()#カーネル終了までまつ
-
-#時間計測
-loop=4
-calc=time.time()
-for i in range(loop):
+    #自作SGEMM
+    #初回カーネル起動 初回はオーバーヘッドで正確な時間測定ができないため
     mySGEMM(atflag, btflag, m, n, k, vram_A, vram_B, vram_C)
-drv.Context.synchronize()#カーネル終了までまつ
-calc=time.time()-calc
+    drv.Context.synchronize()#カーネル終了までまつ
 
-print("{0}TFLOPS".format(n*m*k*2/calc/1000/1000/1000/1000*loop))
+    #時間計測
+    loop=2
+    calc=time.time()
+    for i in range(loop):
+        mySGEMM(atflag, btflag, m, n, k, vram_A, vram_B, vram_C)
+    drv.Context.synchronize()#カーネル終了までまつ
+    calc=time.time()-calc
 
-#結果確認
-drv.memcpy_dtoh(C,vram_C)
-err=np.dot(A,B)-C.reshape([m,n])
-print("最終誤差")
-print(np.max(err), np.min(err))
+    print("{0}TFLOPS".format(n*m*k*2/calc/1000/1000/1000/1000*loop))
+
+    #結果確認
+    drv.memcpy_dtoh(C,vram_C)
+    err=np.dot(A,B)-C.reshape([m,n])
+    print("最終誤差")
+    print(np.max(err), np.min(err))
